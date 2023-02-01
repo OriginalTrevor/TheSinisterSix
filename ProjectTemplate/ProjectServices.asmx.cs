@@ -6,6 +6,7 @@ using System.Web.Services;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace ProjectTemplate
 {
@@ -19,9 +20,9 @@ namespace ProjectTemplate
 		////////////////////////////////////////////////////////////////////////
 		///replace the values of these variables with your database credentials
 		////////////////////////////////////////////////////////////////////////
-		private string dbID = "cis440template";
-		private string dbPass = "!!Cis440";
-		private string dbName = "cis440template";
+		private string dbID = "springa2023team4";
+		private string dbPass = "springa2023team4";
+		private string dbName = "springa2023team4";
 		////////////////////////////////////////////////////////////////////////
 		
 		////////////////////////////////////////////////////////////////////////
@@ -32,12 +33,50 @@ namespace ProjectTemplate
 		}
 		////////////////////////////////////////////////////////////////////////
 
+		/**
+		 * LogOn
+		 */
 
-
-		/////////////////////////////////////////////////////////////////////////
-		//don't forget to include this decoration above each method that you want
-		//to be exposed as a web service!
 		[WebMethod(EnableSession = true)]
+		public bool LogOn(string uid, string pass)
+		{
+			bool success = false;
+            string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+            string sqlSelect = "SELECT userid FROM accounts WHERE userid=@idValue and pass=@passValue";
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
+            
+            sqlCommand.Parameters.AddWithValue("@idValue", HttpUtility.UrlDecode(uid));
+            sqlCommand.Parameters.AddWithValue("@passValue", HttpUtility.UrlDecode(pass));
+
+            
+            MySqlDataAdapter sqlDa = new MySqlDataAdapter(sqlCommand);
+            
+            DataTable sqlDt = new DataTable();
+            
+            sqlDa.Fill(sqlDt);
+            
+            if (sqlDt.Rows.Count > 0)
+            {
+                Session["userid"] = sqlDt.Rows[0]["userid"];
+                success = true;
+            }
+            //return the result!
+            return success;
+        }
+
+        [WebMethod(EnableSession = true)]
+        public bool LogOff()
+        {
+            Session.Abandon();
+            return true;
+        }
+
+        /////////////////////////////////////////////////////////////////////////
+        //don't forget to include this decoration above each method that you want
+        //to be exposed as a web service!
+        [WebMethod(EnableSession = true)]
 		/////////////////////////////////////////////////////////////////////////
 		public string TestConnection()
 		{
