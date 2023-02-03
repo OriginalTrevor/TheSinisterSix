@@ -73,33 +73,6 @@ namespace ProjectTemplate
             return true;
         }
 
-        /**
-         * CreateAccount() will let users make an account
-         */
-        [WebMethod(EnableSession = true)]
-        public void CreateAccount(string uid, string pass)
-        {
-            string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
-            string sqlSelect = "insert into accounts (userid, pass) " +
-                "values(@idValue, @passValue); SELECT LAST_INSERT_ID();";
-
-            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
-            MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
-
-            sqlCommand.Parameters.AddWithValue("@idValue", HttpUtility.UrlDecode(uid));
-            sqlCommand.Parameters.AddWithValue("@passValue", HttpUtility.UrlDecode(pass));
-
-            sqlConnection.Open();
-            try
-            {
-                int accountID = Convert.ToInt32(sqlCommand.ExecuteScalar());
-            }
-            catch (Exception e)
-            {
-            }
-            sqlConnection.Close();
-        }
-
         /////////////////////////////////////////////////////////////////////////
         //don't forget to include this decoration above each method that you want
         //to be exposed as a web service!
@@ -129,6 +102,20 @@ namespace ProjectTemplate
 			}
 		}
 
-		
+		[WebMethod]
+		public Person[] getJasons(int userCount)
+		{
+			List<Person> people = new List<Person>();
+			for (int i = 0; i < userCount; i++)
+			{
+				Person jason = new Person();
+                jason.firstName = "Jason";
+                jason.lastName = "Nichols";
+                jason.phoneNumber = 1234567891;
+				people.Add(jason);
+            }
+			
+			return people.ToArray();
+		}
 	}
 }
