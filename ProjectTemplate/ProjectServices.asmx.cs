@@ -129,20 +129,6 @@ namespace ProjectTemplate
 			}
 		}
 
-		[WebMethod]
-		public Person[] getJasons(int userCount)
-		{
-			List<Person> people = new List<Person>();
-			for (int i = 0; i < userCount; i++)
-			{
-				Person jason = new Person();
-                jason.firstName = "Jason";
-                jason.lastName = "Nichols";
-                jason.phoneNumber = 1234567891;
-				people.Add(jason);
-            }
-			
-			return people.ToArray();
-		}
+		
 	}
 }
