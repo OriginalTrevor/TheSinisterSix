@@ -73,6 +73,33 @@ namespace ProjectTemplate
             return true;
         }
 
+        /**
+         * CreateAccount() will let users make an account
+         */
+        [WebMethod(EnableSession = true)]
+        public void CreateAccount(string uid, string pass)
+        {
+            string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+            string sqlSelect = "insert into accounts (userid, pass) " +
+                "values(@idValue, @passValue); SELECT LAST_INSERT_ID();";
+
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
+            sqlCommand.Parameters.AddWithValue("@idValue", HttpUtility.UrlDecode(uid));
+            sqlCommand.Parameters.AddWithValue("@passValue", HttpUtility.UrlDecode(pass));
+
+            sqlConnection.Open();
+            try
+            {
+                int accountID = Convert.ToInt32(sqlCommand.ExecuteScalar());
+            }
+            catch (Exception e)
+            {
+            }
+            sqlConnection.Close();
+        }
+
         /////////////////////////////////////////////////////////////////////////
         //don't forget to include this decoration above each method that you want
         //to be exposed as a web service!
