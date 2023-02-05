@@ -90,9 +90,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AccountCreation.html" />
+    <Content Include="AccountStyle.css" />
     <Content Include="Global.asax" />
     <Content Include="index.html" />
     <Content Include="ProjectServices.asmx" />
+    <Content Include="SignInPage.html" />
+    <Content Include="SignInStyle.css" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
